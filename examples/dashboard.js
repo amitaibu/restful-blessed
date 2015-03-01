@@ -324,13 +324,10 @@ function renderScreen(events, answers) {
 //    screen.render()
 //  }, 5000)
 
-  function setLineData(mockData, line) {
-    var last = mockData.y[mockData.y.length-1]
-    mockData.x.shift();
+  function setLineData(mockData, line, responseTime) {
+    var num = responseTime || 50;
     mockData.y.shift();
-    var num = Math.max(last + Math.round(Math.random()*10) - 5, 10)
-    mockData.x.push('05:00');
-    mockData.y.push(50)
+    mockData.y.push(num)
     line.setData(mockData.x, mockData.y)
   }
 
@@ -351,7 +348,7 @@ function renderScreen(events, answers) {
       // transactionsData.push({x: '05:00', y: responseTime});
 
       // Set linedata.
-      setLineData(transactionsData, transactionsLine);
+      setLineData(transactionsData, transactionsLine, responseTime);
 
     });
   }, 1000);

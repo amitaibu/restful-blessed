@@ -3,10 +3,10 @@ var blessed = require('blessed')
   , inquirer = require('inquirer')
   , request = require('request')
   , R = require('ramda')
-  , Q = require('q');
+  , Q = require('q')
+  , moment = require('moment');
 
 var companyIds;
-
 
 var questions = [
   {
@@ -95,17 +95,9 @@ getEvents = function(answers) {
 };
 
 function renderScreen(events, answers) {
-  setInterval(function() {
-    // Keep queries the server.
-    getEvents(answers).then(function (response) {
-      events = response;
-    });
-  }, 1000);
-
-
   var screen = blessed.screen()
 
-//create layout and widgets
+  //create layout and widgets
 
   var grid = new contrib.grid({rows: 1, cols: 2})
 
@@ -224,12 +216,12 @@ function renderScreen(events, answers) {
   setInterval(generateTable, 3000)
 
 
-//set log dummy data
+  // Set log data.
+  log.log('starting process');
+  screen.render();
+
   setInterval(function() {
-    var rnd = Math.round(Math.random()*2)
-    if (rnd==0) log.log('starting process ' + commands[Math.round(Math.random()*(commands.length-1))])
-    else if (rnd==1) log.log('terminating server ' + servers[Math.round(Math.random()*(servers.length-1))])
-    else if (rnd==2) log.log('avg. wait time ' + Math.random().toFixed(2))
+    log.log('Request time ' + Math.random().toFixed(2));
     screen.render()
   }, 500)
 
@@ -295,13 +287,16 @@ function renderScreen(events, answers) {
 
 //set line charts dummy data
 
+
+  var startTime = moment().format('hh:mm');
+
   var transactionsData = {
-    x: ['00:00', '00:05', '00:10', '00:15', '00:20', '00:30', '00:40', '00:50', '01:00', '01:10', '01:20', '01:30', '01:40', '01:50', '02:00', '02:10', '02:20', '02:30', '02:40', '02:50', '03:00', '03:10', '03:20', '03:30', '03:40', '03:50', '04:00', '04:10', '04:20', '04:30'],
+    x: [startTime, '00:05', '00:10', '00:15', '00:20', '00:30', '00:40', '00:50', '01:00', '01:10', '01:20', '01:30', '01:40', '01:50', '02:00', '02:10', '02:20', '02:30', '02:40', '02:50', '03:00', '03:10', '03:20', '03:30', '03:40', '03:50', '04:00', '04:10', '04:20', '04:30'],
     y: [0, 10, 40, 45, 45, 50, 55, 70, 65, 58, 50, 55, 60, 65, 70, 80, 70, 50, 40, 50, 60, 70, 82, 88, 89, 89, 89, 80, 72, 70]
   }
 
   var errorsData = {
-    x: ['00:00', '00:05', '00:10', '00:15', '00:20', '00:25'],
+    x: [startTime, '00:05', '00:10', '00:15', '00:20', '00:25'],
     y: [30, 50, 70, 40, 50, 20]
   }
 
@@ -314,26 +309,28 @@ function renderScreen(events, answers) {
   setLineData(errorsData, errorsLine)
   setLineData(latencyData, latencyLine)
 
-  setInterval(function() {
-    setLineData(transactionsData, transactionsLine)
-    screen.render()
-  }, 500)
-
-  setInterval(function() {
-    setLineData(errorsData, errorsLine)
-    screen.render()
-  }, 1500)
-
-  setInterval(function() {
-    setLineData(latencyData, latencyLine)
-    screen.render()
-  }, 5000)
+//  setInterval(function() {
+//    setLineData(transactionsData, transactionsLine)
+//    screen.render()
+//  }, 500)
+//
+//  setInterval(function() {
+//    setLineData(errorsData, errorsLine)
+//    screen.render()
+//  }, 1500)
+//
+//  setInterval(function() {
+//    setLineData(latencyData, latencyLine)
+//    screen.render()
+//  }, 5000)
 
   function setLineData(mockData, line) {
     var last = mockData.y[mockData.y.length-1]
-    mockData.y.shift()
+    mockData.x.shift();
+    mockData.y.shift();
     var num = Math.max(last + Math.round(Math.random()*10) - 5, 10)
-    mockData.y.push(num)
+    mockData.x.push('05:00');
+    mockData.y.push(50)
     line.setData(mockData.x, mockData.y)
   }
 
@@ -342,5 +339,20 @@ function renderScreen(events, answers) {
     return process.exit(0);
   });
 
-  screen.render()
+  screen.render();
+
+  setInterval(function() {
+    // Keep queries the server.
+    var start = new Date();
+    getEvents(answers).then(function (response) {
+      events = response;
+      var responseTime = new Date() - start;
+
+      // transactionsData.push({x: '05:00', y: responseTime});
+
+      // Set linedata.
+      setLineData(transactionsData, transactionsLine);
+
+    });
+  }, 1000);
 }

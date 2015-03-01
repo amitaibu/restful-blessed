@@ -1,6 +1,6 @@
 {
   "name": "blessed-contrib",
-  "version": "1.0.9",
+  "version": "0.0.9",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,10 +17,14 @@
   },
   "dependencies": {
     "ansi-term": ">=0.0.1",
-    "map-canvas": ">=0.0.4",
     "drawille-canvas-blessed-contrib": ">=0.0.1",
+    "inquirer": "^0.8.0",
+    "map-canvas": ">=0.0.4",
     "memory-streams": "^0.1.0",
     "picture-tube": "0.0.4",
+    "q": "^1.2.0",
+    "ramda": "^0.10.0",
+    "request": "^2.53.0",
     "sparkline": "^0.1.1",
     "term-canvas": "0.0.5"
   }

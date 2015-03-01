@@ -7,6 +7,7 @@ var blessed = require('blessed')
 
 var companyIds;
 
+
 var questions = [
   {
     type: "input",
@@ -45,22 +46,23 @@ var questions = [
       request.get(url, {auth: auth}, function (error, response, body) {
         var data = JSON.parse(body).data;
 
-        companyIds = R.mapObj(R.props(['id', 'label']), data);
+        companyIds = data;
 
         var result = R.map(R.prop('label'), data);
         done(result);
       });
     },
     filter: function filterCompany(answer) {
-      return R.indexOf(answer, companyIds);
+      // Return the company ID.
+      var result = R.find(R.propEq('label', answer))(companyIds);
+      return (R.prop('id', result));
     }
   }
 ];
 
 inquirer.prompt( questions, function(answers) {
   getEvents(answers).then(function (events) {
-    console.log(answers);
-    // renderScreen(events, answers);
+    renderScreen(events, answers);
   });
 });
 
@@ -75,7 +77,7 @@ getEvents = function(answers) {
 
   var qs = {
     filter: {
-      company: 2
+      company: answers.company
     }
   };
 

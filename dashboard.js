@@ -1,5 +1,5 @@
 var blessed = require('blessed')
-  , contrib = require('../index')
+  , contrib = require('./index')
   , inquirer = require('inquirer')
   , request = require('request')
   , R = require('ramda')

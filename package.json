@@ -1,0 +1,27 @@
+{
+  "name": "blessed-contrib",
+  "version": "1.0.9",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yaronn/blessed-contrib.git"
+  },
+  "author": "Yaron Naveh (yaronn01@gmail.com)",
+  "license": "",
+  "devDependencies": {
+    "blessed": "^0.0.44"
+  },
+  "dependencies": {
+    "ansi-term": ">=0.0.1",
+    "map-canvas": ">=0.0.4",
+    "drawille-canvas-blessed-contrib": ">=0.0.1",
+    "memory-streams": "^0.1.0",
+    "picture-tube": "0.0.4",
+    "sparkline": "^0.1.1",
+    "term-canvas": "0.0.5"
+  }
+}

@@ -331,11 +331,12 @@ function renderScreen(events, answers) {
 //    screen.render()
 //  }, 5000)
 
-  function setLineData(data, line, responseTime) {
-    var num = responseTime || 50;
+  function setLineData(data, line, value) {
+    // Add the new value.
     data.y.shift();
-    data.y.push(num)
+    data.y.push(value)
 
+    // Change the time of the last item.
     data.x.shift();
     data.x.push(moment().format('hh:mm:ss'));
 

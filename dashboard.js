@@ -116,35 +116,30 @@ function renderScreen(events, answers) {
   grid3.set(0, 0, 1, 1, contrib.table,
     { keys: true
       , fg: 'green'
-      , label: 'Active Processes'
+      , label: 'Events'
       , columnSpacing: [24, 10, 10]})
 
-  var grid4 = new contrib.grid({rows: 3, cols: 1})
+  var grid4 = new contrib.grid({rows: 2, cols: 1})
   grid4.set(0, 0, 1, 1, grid3);
   grid4.set(1, 0, 1, 1, grid1);
 
-  grid4.set(2, 0, 1, 1,   contrib.log,
-    { fg: "green"
-      , selectedFg: "green"
-      , label: 'TEST'
-    });
-
   var grid5 = new contrib.grid({rows: 2, cols: 1})
-  grid5.set(0, 0, 1, 1, contrib.line,
+
+  grid5.set(0, 0, 1, 1, contrib.map, {label: 'Map'})
+  grid5.set(1, 0, 1, 1, contrib.line,
     { maxY: 500,
-      label: 'Total Transactions'
+      label: 'Request time (ms)'
     });
 
-  grid5.set(1, 0, 1, 1, contrib.map, {label: 'Servers Location'})
   grid.set(0, 0, 1, 1, grid5)
   grid.set(0, 1, 1, 1, grid4)
 
   grid.applyLayout(screen)
 
-  var transactionsLine = grid5.get(0, 0)
-  var map = grid5.get(1, 0)
-  var log = grid1.get(0, 0)
-  var table = grid3.get(0,0)
+  var map = grid5.get(0, 0);
+  var transactionsLine = grid5.get(1, 0);
+  var log = grid1.get(0, 0);
+  var table = grid3.get(0,0);
 
   var commands = ['grep', 'node', 'java', 'timer', '~/ls -l', 'netns', 'watchdog', 'gulp', 'tar -xvf', 'awk', 'npm install']
 
@@ -161,7 +156,7 @@ function renderScreen(events, answers) {
       data.push(row)
     }
 
-    table.setData({headers: ['Process', 'Cpu (%)', 'Memory'], data: data})
+    table.setData({headers: ['Title', 'Author', 'Time'], data: data})
   }
 
   generateTable()
@@ -170,17 +165,22 @@ function renderScreen(events, answers) {
 
 
   // Set log data.
-  log.log('starting process');
+  log.log('Starting process');
   screen.render();
 
-  setInterval(function() {
-    log.log('Request time ' + Math.random().toFixed(2));
-    screen.render()
-  }, 500)
+  /**
+   * Set the response time from the server.
+   *
+   * @param value
+   */
+  function setResponseTime(value) {
+    log.log('Request time ' + value + 'ms');
+    screen.render();
+  }
 
 
-//set map dummy markers
-  var marker = true
+  // Set map markers.
+  var marker = true;
   setInterval(function() {
     if (marker) {
 
@@ -257,6 +257,7 @@ function renderScreen(events, answers) {
 
       // Set linedata.
       setLineData(transactionsData, transactionsLine, responseTime);
+      setResponseTime(responseTime);
 
     });
   }, 1000);

@@ -302,34 +302,7 @@ function renderScreen(events, answers) {
     transactionsData.y.push(0);
   }
 
-  var errorsData = {
-    x: ['00:00', '00:05', '00:10', '00:15', '00:20', '00:25'],
-    y: [30, 50, 70, 40, 50, 20]
-  }
-
-  var latencyData = {
-    x: ['t1', 't2', 't3', 't4'],
-    y: [5, 1, 7, 5]
-  }
-
   setLineData(transactionsData, transactionsLine)
-  setLineData(errorsData, errorsLine)
-  setLineData(latencyData, latencyLine)
-
-//  setInterval(function() {
-//    setLineData(transactionsData, transactionsLine)
-//    screen.render()
-//  }, 500)
-//
-//  setInterval(function() {
-//    setLineData(errorsData, errorsLine)
-//    screen.render()
-//  }, 1500)
-//
-//  setInterval(function() {
-//    setLineData(latencyData, latencyLine)
-//    screen.render()
-//  }, 5000)
 
   function setLineData(data, line, value) {
     // Add the new value.

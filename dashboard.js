@@ -103,31 +103,20 @@ function renderScreen(events, answers) {
     return process.exit(0);
   });
 
-  //create layout and widgets
+  // Create layout and widgets.
   var grid = new contrib.grid({rows: 1, cols: 2})
 
-  var grid1 = new contrib.grid({rows: 1, cols: 3})
+  var grid1 = new contrib.grid({rows: 1, cols: 2})
   grid1.set(0, 0, 1, 1, contrib.log,
     { fg: "green"
       , selectedFg: "green"
-      , label: 'Server Log'})
-  grid1.set(0, 1, 1, 1, contrib.line,
-    { style:
-    { line: "yellow"
-      , text: "green"
-      , baseline: "black"}
-      , xLabelPadding: 3
-      , xPadding: 5
-      , label: 'Network Latency (sec)'})
+      , label: 'Server Log'});
 
-  var grid2 = new contrib.grid({rows: 2, cols: 1})
-  grid2.set(0, 0, 1, 1, contrib.gauge, {label: 'Deployment Progress'})
-  grid2.set(1, 0, 1, 1, contrib.sparkline,
-    { label: 'Throughput (bits/sec)'
-      , tags: true
-      , style: { fg: 'blue' }})
-
-  grid1.set(0, 2, 1, 1, grid2)
+  grid1.set(0, 1, 1, 1, contrib.log,
+    { fg: "green"
+      , selectedFg: "green"
+      , label: 'TEST'
+    });
 
   var grid3 = new contrib.grid({rows: 1, cols: 2})
   grid3.set(0, 0, 1, 1, contrib.bar,
@@ -166,40 +155,11 @@ function renderScreen(events, answers) {
   grid.applyLayout(screen)
 
   var transactionsLine = grid5.get(0, 0)
-  var errorsLine = grid4.get(0, 0)
-  var latencyLine = grid1.get(0, 1)
   var map = grid5.get(1, 0)
   var log = grid1.get(0, 0)
   var table = grid3.get(0,1)
-  var sparkline = grid2.get(1, 0)
-  var gauge = grid2.get(0, 0)
-  var bar = grid3.get(0, 0)
 
-
-//dummy data
-  var servers = ['US1', 'US2', 'EU1', 'AU1', 'AS1', 'JP1']
   var commands = ['grep', 'node', 'java', 'timer', '~/ls -l', 'netns', 'watchdog', 'gulp', 'tar -xvf', 'awk', 'npm install']
-
-
-//set dummy data on gauge
-  var gauge_percent = 0
-  setInterval(function() {
-    gauge.setPercent(gauge_percent++)
-    if (gauge_percent>100) gauge_percent = 0
-  }, 200)
-
-
-//set dummy data on bar chart
-  function fillBar() {
-    var arr = []
-    for (var i=0; i<servers.length; i++) {
-      arr.push(Math.round(Math.random()*10))
-    }
-    bar.setData({titles: servers, data: arr})
-  }
-  fillBar()
-  setInterval(fillBar, 2000)
-
 
 //set dummy data for table
   function generateTable() {
@@ -230,23 +190,6 @@ function renderScreen(events, answers) {
     log.log('Request time ' + Math.random().toFixed(2));
     screen.render()
   }, 500)
-
-
-//set spark dummy data
-  var spark1 = [1,2,5,2,1,5,1,2,5,2,1,5,4,4,5,4,1,5,1,2,5,2,1,5,1,2,5,2,1,5,1,2,5,2,1,5]
-  var spark2 = [4,4,5,4,1,5,1,2,5,2,1,5,4,4,5,4,1,5,1,2,5,2,1,5,1,2,5,2,1,5,1,2,5,2,1,5]
-
-  refreshSpark()
-  setInterval(refreshSpark, 1000)
-
-  function refreshSpark() {
-    spark1.shift()
-    spark1.push(Math.random()*5+1)
-    spark2.shift()
-    spark2.push(Math.random()*5+1)
-    sparkline.setData(['Server1', 'Server2'], [spark1, spark2])
-  }
-
 
 
 //set map dummy markers

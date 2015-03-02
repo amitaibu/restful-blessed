@@ -13,7 +13,7 @@ var questions = [
     type: "input",
     name: "url",
     message: "The URL",
-    default: 'http://localhost/skeleton/www'
+    default: 'http://live-hedley.pantheon.io'
   },
   {
     type: "input",

@@ -155,9 +155,10 @@ function renderScreen(events, answers) {
 
   var grid5 = new contrib.grid({rows: 2, cols: 1})
   grid5.set(0, 0, 1, 1, contrib.line,
-    { showNthLabel: 5
-      , maxY: 100
-      , label: 'Total Transactions'})
+    { maxY: 500,
+      label: 'Total Transactions'
+    });
+
   grid5.set(1, 0, 1, 1, contrib.map, {label: 'Servers Location'})
   grid.set(0, 0, 1, 1, grid5)
   grid.set(0, 1, 1, 1, grid4)
@@ -290,18 +291,19 @@ function renderScreen(events, answers) {
 
 
 
-//set line charts dummy data
-
-
-  var startTime = moment().format('hh:mm');
-
+  // Set line charts data.
   var transactionsData = {
-    x: [startTime, '00:05', '00:10', '00:15', '00:20', '00:30', '00:40', '00:50', '01:00', '01:10', '01:20', '01:30', '01:40', '01:50', '02:00', '02:10', '02:20', '02:30', '02:40', '02:50', '03:00', '03:10', '03:20', '03:30', '03:40', '03:50', '04:00', '04:10', '04:20', '04:30'],
-    y: [0, 10, 40, 45, 45, 50, 55, 70, 65, 58, 50, 55, 60, 65, 70, 80, 70, 50, 40, 50, 60, 70, 82, 88, 89, 89, 89, 80, 72, 70]
+    x: [],
+    y: []
+  }
+
+  for (var i = 10; i > 1; i--) {
+    transactionsData.x.push(moment().subtract(i, 'seconds').format('hh:mm:ss'));
+    transactionsData.y.push(0);
   }
 
   var errorsData = {
-    x: [startTime, '00:05', '00:10', '00:15', '00:20', '00:25'],
+    x: ['00:00', '00:05', '00:10', '00:15', '00:20', '00:25'],
     y: [30, 50, 70, 40, 50, 20]
   }
 
@@ -329,11 +331,15 @@ function renderScreen(events, answers) {
 //    screen.render()
 //  }, 5000)
 
-  function setLineData(mockData, line, responseTime) {
+  function setLineData(data, line, responseTime) {
     var num = responseTime || 50;
-    mockData.y.shift();
-    mockData.y.push(num)
-    line.setData(mockData.x, mockData.y)
+    data.y.shift();
+    data.y.push(num)
+
+    data.x.shift();
+    data.x.push(moment().format('hh:mm:ss'));
+
+    line.setData(data.x, data.y)
   }
 
   screen.render();

@@ -143,26 +143,35 @@ function renderScreen(events, answers) {
 
   var commands = ['grep', 'node', 'java', 'timer', '~/ls -l', 'netns', 'watchdog', 'gulp', 'tar -xvf', 'awk', 'npm install']
 
-//set dummy data for table
+  //set dummy data for table
   function generateTable() {
-    var data = []
+    var data = [];
 
-    for (var i=0; i<30; i++) {
-      var row = []
-      row.push(commands[Math.round(Math.random()*(commands.length-1))])
-      row.push(Math.round(Math.random()*5))
-      row.push(Math.round(Math.random()*100))
+    /**
+     * Preapre the data for the events table.
+     *
+     * @param obj
+     * @returns {Array}
+     */
+    function getEventsRow(obj) {
+      var row = [];
 
-      data.push(row)
+      // Convert timestamp to JS date.
+      var date = new Date(R.prop('created', obj) * 1000);
+
+      row.push(R.prop('label', obj));
+      row.push(R.path('user.label', obj));
+      row.push(moment(date).format('DD:MM:YY'));
+
+      return row;
     }
 
+    var data = R.map(getEventsRow)(events);
     table.setData({headers: ['Title', 'Author', 'Time'], data: data})
   }
 
-  generateTable()
-  table.focus()
-  setInterval(generateTable, 3000)
-
+  generateTable();
+  table.focus();
 
   // Set log data.
   log.log('Starting process');

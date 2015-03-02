@@ -106,41 +106,28 @@ function renderScreen(events, answers) {
   // Create layout and widgets.
   var grid = new contrib.grid({rows: 1, cols: 2})
 
-  var grid1 = new contrib.grid({rows: 1, cols: 2})
+  var grid1 = new contrib.grid({rows: 1, cols: 1})
   grid1.set(0, 0, 1, 1, contrib.log,
     { fg: "green"
       , selectedFg: "green"
       , label: 'Server Log'});
 
-  grid1.set(0, 1, 1, 1, contrib.log,
-    { fg: "green"
-      , selectedFg: "green"
-      , label: 'TEST'
-    });
-
-  var grid3 = new contrib.grid({rows: 1, cols: 2})
-  grid3.set(0, 0, 1, 1, contrib.bar,
-    { label: 'Server Utilization (%)'
-      , barWidth: 4
-      , barSpacing: 6
-      , xOffset: 2
-      , maxHeight: 9})
-  grid3.set(0, 1, 1, 1, contrib.table,
+  var grid3 = new contrib.grid({rows: 1, cols: 1})
+  grid3.set(0, 0, 1, 1, contrib.table,
     { keys: true
       , fg: 'green'
       , label: 'Active Processes'
       , columnSpacing: [24, 10, 10]})
 
   var grid4 = new contrib.grid({rows: 3, cols: 1})
-  grid4.set(0, 0, 1, 1, contrib.line,
-    { style:
-    { line: "red"
-      , text: "white"
-      , baseline: "black"}
-      , label: 'Errors Rate'
-      , maxY: 60})
-  grid4.set(1, 0, 1, 1, grid3)
-  grid4.set(2, 0, 1, 1, grid1)
+  grid4.set(0, 0, 1, 1, grid3);
+  grid4.set(1, 0, 1, 1, grid1);
+
+  grid4.set(2, 0, 1, 1,   contrib.log,
+    { fg: "green"
+      , selectedFg: "green"
+      , label: 'TEST'
+    });
 
   var grid5 = new contrib.grid({rows: 2, cols: 1})
   grid5.set(0, 0, 1, 1, contrib.line,
@@ -157,7 +144,7 @@ function renderScreen(events, answers) {
   var transactionsLine = grid5.get(0, 0)
   var map = grid5.get(1, 0)
   var log = grid1.get(0, 0)
-  var table = grid3.get(0,1)
+  var table = grid3.get(0,0)
 
   var commands = ['grep', 'node', 'java', 'timer', '~/ls -l', 'netns', 'watchdog', 'gulp', 'tar -xvf', 'awk', 'npm install']
 

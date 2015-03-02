@@ -95,10 +95,15 @@ getEvents = function(answers) {
 };
 
 function renderScreen(events, answers) {
-  var screen = blessed.screen()
+  var screen = blessed.screen();
+
+  // Register the escape early, so if there's an error in the code, it's
+  // possible to exit the process.
+  screen.key(['escape', 'q', 'C-c'], function(ch, key) {
+    return process.exit(0);
+  });
 
   //create layout and widgets
-
   var grid = new contrib.grid({rows: 1, cols: 2})
 
   var grid1 = new contrib.grid({rows: 1, cols: 3})
@@ -331,11 +336,6 @@ function renderScreen(events, answers) {
     line.setData(mockData.x, mockData.y)
   }
 
-
-  screen.key(['escape', 'q', 'C-c'], function(ch, key) {
-    return process.exit(0);
-  });
-
   screen.render();
 
   setInterval(function() {
@@ -344,8 +344,6 @@ function renderScreen(events, answers) {
     getEvents(answers).then(function (response) {
       events = response;
       var responseTime = new Date() - start;
-
-      // transactionsData.push({x: '05:00', y: responseTime});
 
       // Set linedata.
       setLineData(transactionsData, transactionsLine, responseTime);
